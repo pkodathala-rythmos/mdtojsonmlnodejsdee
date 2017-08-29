@@ -2,6 +2,7 @@ var express = require('express');
 var markdown = require( "./src/markdown" );
 var model = require('nodejs-model');
 var request = require('request');
+var path=require('path');
 
 var MdFile = model("MdFile").attr('filePath', {
     validations: {
@@ -17,6 +18,7 @@ var bodyParser = require('body-parser').json();
 //filePath = path.join('https://googledocmdstorage.blob.core.windows.net/sukhiimages/md_start.txt');
 
 var app = express();
+//app.use(express.static(path.join(__dirname, 'app')));
 app.post('/convert',bodyParser, function(req, res) {
     console.log('received data: ' + req.body);
     request.get(req.body.filePath, function (error, response, body) {
@@ -26,6 +28,9 @@ app.post('/convert',bodyParser, function(req, res) {
             // Continue with your processing here.
         }
     });
+    app.get('/api/ping', function (req, res) {
+        res.send({message: 'pong'});
+      });
     // fs.readlink(req.body.filePath, {encoding: 'utf-8'}, function(err,data){
     //     if (!err) {
     //        // console.log('received data: ' + data);
@@ -58,5 +63,5 @@ app.post('/convert',bodyParser, function(req, res) {
 //  " And here's some code! :+1:";
  
 });
-app.listen(3001);
-console.log('Listening on port 3001...');
+app.listen(process.env.PORT||3000);
+console.log('Listening on port');
